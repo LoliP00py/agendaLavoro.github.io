@@ -25,10 +25,14 @@ function registraUscita() {
 
 	// Abilita il pulsante di calcolo ore
 	calcolaOreButton.disabled = false;
+
+        // Abilita il pulsante di uscita e disabilita quello di entrata
+	entrataButton.disabled = false;
+	uscitaButton.disabled = true;
 }
 
 function calcolaOre() {
 	// Calcola il numero di ore lavorate
-	const oreLavorate = (uscita - entrata) / (1000 * 60 * 60);
+	const oreLavorate = (uscita - entrata) / (1000 * 60 * 60 * 60);
 	oreLavorateLabel.innerText = `Hai lavorato per ${oreLavorate.toFixed(2)} ore`;
 }
