@@ -26,7 +26,7 @@ function registraUscita() {
 	// Abilita il pulsante di calcolo ore
 	calcolaOreButton.disabled = false;
 
-        // Abilita il pulsante di uscita e disabilita quello di entrata
+        // Abilita il pulsante di entrata e disabilita quello di uscita
 	entrataButton.disabled = false;
 	uscitaButton.disabled = true;
 }
