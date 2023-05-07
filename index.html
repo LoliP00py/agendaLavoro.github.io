@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Agenda Lavoro</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="agenda">
+		<h1>Agenda Lavoro</h1>
+		<div class="controls">
+			<button id="entrata-button" onclick="registraEntrata()">Entrata</button>
+			<button id="uscita-button" onclick="registraUscita()" disabled>Uscita</button>
+			<button id="calcola-ore-button" onclick="calcolaOre()" disabled>Calcola ore</button>
+		</div>
+		<div class="labels">
+			<label id="entrata-label"></label>
+			<label id="uscita-label"></label>
+			<label id="ore-lavorate-label"></label>
+		</div>
+	</div>
+	<script src="script.js"></script>
+</body>
+</html>
