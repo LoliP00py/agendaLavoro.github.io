@@ -1,23 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-	<title>Agenda Lavoro</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Lavoratori</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
 </head>
 <body>
-	<div class="agenda">
-		<h1>Agenda Lavoro</h1>
-		<div class="controls">
-			<button id="entrata-button" onclick="registraEntrata()">Entrata</button>
-			<button id="uscita-button" onclick="registraUscita()" disabled>Uscita</button>
-			<button id="calcola-ore-button" onclick="calcolaOre()" disabled>Calcola ore</button>
-		</div>
-		<div class="labels">
-			<label id="entrata-label"></label>
-			<label id="uscita-label"></label>
-			<label id="ore-lavorate-label"></label>
-		</div>
-	</div>
-	<script src="script.js"></script>
+<h1  align=center>Agenda Lavoratori</h1>
+
+<label for="inizio">Inizio lavoro:</label>
+<input type="time" id="inizio" placeholder="Inizio lavoro">
+<button onclick="segnaInizio()">Inizio Lavoro</button>
+<br><br>
+
+<label for="fine">Fine lavoro:</label>
+<input type="time" id="fine" placeholder="Fine lavoro">
+<button onclick="segnaFine()">Fine Lavoro</button>
+<br><br>
+
+<button onclick="calcolaOre()">Calcola ore lavorate</button>
+<button onclick="salvaDati()">Salva dati</button>
+
+<h2>Tabella delle ore lavorate</h2>
+<table id="tabella">
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Ore Lavorate</th>
+      <th>Ore Straordinarie</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  const inizio = document.getElementById('inizio');
+  const fine = document.getElementById('fine');
+  const tabella = document.getElementById('tabella').getElementsByTagName('tbody')[0];
+
+  function aggiungiRiga(data, ore, straordinarie) {
+    const newRow = tabella.insertRow(-1);
+    newRow.insertCell(0).innerText = data;
+    newRow.insertCell(1).innerText = ore;
+    newRow.insertCell(2).innerText = straordinarie;
+  }
+
+  function calcolaOre() {
+    const inizioLavoro = new Date();
+    const fineLavoro = new Date();
+    inizioLavoro.setHours(...inizio.value.split(':'));
+    fineLavoro.setHours(...fine.value.split(':'));
+    const oreLavorate = (fineLavoro - inizioLavoro) / 1000 / 60 / 60;
+    //se mancano i minuti alert("aggiungi minuti")
+    //se metto solo l'ora senza i minuti agggiungi in automatico :00 
+    const oreStraordinarie = Math.max(0, oreLavorate - 8);
+    alert(`Ore lavorate: ${oreLavorate.toFixed(2)}\nOre straordinarie: ${oreStraordinarie.toFixed(2)}`);
+  }
+
+  function salvaDati() {
+    const oggi = new Date().toLocaleDateString();
+    const inizioLavoro = inizio.value;
+    const fineLavoro = fine.value;
+    const oreLavorate = (new Date(`1970-01-01T${fineLavoro}`) - new Date(`1970-01-01T${inizioLavoro}`)) / 1000 / 60 / 60;
+    const oreStraordinarie = Math.max(0, oreLavorate - 8);
+    aggiungiRiga(oggi, oreLavorate.toFixed(2), oreStraordinarie.toFixed(2));
+    const dati = { oreLavorate: oreLavorate.toFixed(2), oreStraordinarie: oreStraordinarie.toFixed(2) };
+    localStorage.setItem(encodeURIComponent(oggi), JSON.stringify(dati));
+  }
+
+  function caricaDati() {
+    for (let key in localStorage) {
+      const item = JSON.parse(localStorage.getItem(decodeURIComponent(key)));
+      if (item) {
+        aggiungiRiga(decodeURIComponent(key), item.oreLavorate, item.oreStraordinarie);
+      }
+    }
+  }
+
+  function segnaInizio() {
+    const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    inizio.value = oraCorrente;
+  }
+
+  function segnaFine() {
+    const oraCorrente = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    fine.value = oraCorrente;
+  }
+
+  caricaDati();
+</script>
 </body>
 </html>
